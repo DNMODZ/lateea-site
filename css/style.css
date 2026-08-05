@@ -690,11 +690,47 @@ footer {
 @media (max-width: 860px) {
   .spec-grid { grid-template-columns: 1fr; gap: 30px; }
   .spec-aside { border-left:none; padding-left:0; border-top:1px solid var(--line-br); padding-top:26px; }
-  h2 { font-size: 36px; }
-  #topbar nav { gap: 16px; }
-  #topbar { padding: 12px 18px; }
-  main { padding: 0 18px; }
-  .feat { grid-template-columns: 60px 1fr; gap: 18px; }
+  h2 { font-size: 34px; }
+  #topbar nav { gap: 14px; }
+  #topbar { padding: 10px 14px; }
+  main { padding: 0 16px; }
+  .feat { grid-template-columns: 46px 1fr; gap: 14px; }
+  .feat-num { font-size: 22px; }
+  .feat-body h3 { font-size: 24px; }
   .param-table > div { flex-direction: column; gap: 2px; }
-  .param-table dd { white-space: normal; }
+  .param-table dd { white-space: normal; text-align: left; }
+  .hero { padding-top: 100px; }
+  .display { font-size: clamp(64px, 20vw, 120px); }
+  .sub-line { font-size: 20px; }
+  .lede { font-size: 17px; }
+  .cta { gap: 12px; }
+  .btn { padding: 12px 20px; font-size: 15px; }
+  .step-head { gap: 12px; }
+  .step h3 { font-size: 18px; }
+  .code-row { flex-direction: column; align-items: stretch; }
+  .code-row code { word-break: break-all; }
+  .copy-btn { align-self: flex-end; }
+  .win, .tg { max-width: 100%; }
+  .tg-body { max-height: 260px; }
+  #topbar .brand { font-size: 18px; letter-spacing: .1em; }
+  #topbar nav { gap: 10px; flex-wrap: wrap; }
+  #topbar nav a { font-size: 13px; }
+  #themeToggle { width: 34px; height: 34px; }
+  .tg-kb { grid-template-columns: 1fr; }
+  .changelog li { flex-direction: column; gap: 6px; }
+  .changelog .tag { align-self: flex-start; }
+  .ticker { top: 52px; }
+}
+
+@media (max-width: 480px) {
+  .display { font-size: clamp(56px, 19vw, 100px); }
+  h2 { font-size: 28px; }
+  .lede { font-size: 16px; }
+  .spec-aside { padding-left: 0; }
+  .p-row-3 { grid-template-columns: 1fr; }
+  .p-row-2 { grid-template-columns: 1fr; }
+  .p-foot { flex-direction: column; gap: 6px; align-items: flex-start; }
+  .mode-list li b { font-size: 20px; }
+  .plate { padding: 18px 16px; font-size: 14px; }
+  .warn-plate p { font-size: 16px; }
 }

@@ -474,6 +474,13 @@
     tgRenderMenu('menu');
   }
 
+  // XSS guard — ใช้กับข้อความจากผู้ใช้/คำสั่งก่อนใส่ bubble (กัน HTML injection)
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
   function tgAddBubble(who, html) {
     var chat = document.getElementById('tgChat');
     if (!chat) return;
@@ -644,8 +651,8 @@
     var reply = row[2];
     var next = row[3];
 
-    // ส่งคำสั่ง (เหมือนผู้ใช้กดปุ่ม)
-    tgAddBubble('me', cmd);
+    // ส่งคำสั่ง (เหมือนผู้ใช้กดปุ่ม) — esc กัน HTML injection
+    tgAddBubble('me', esc(cmd));
 
     // แอกชันพิเศษ (toggle / status / calclot / set_*)
     if (reply.indexOf('toggle') === 0 ||

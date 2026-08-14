@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Disallow: /v16-luna-1408.html

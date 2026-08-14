@@ -747,3 +747,76 @@ footer {
   .hero-plate { width: auto; max-width: 100%; overflow-wrap: anywhere; }
   .hero { padding-top: 175px; }
 }
+
+/* ============================================================
+   V16-Luna-1408 — กำไร EA (profit section) + WikiFx button
+   ============================================================ */
+.btn-wikifx {
+  color: #fff;
+  background: linear-gradient(180deg, #b98a2f, #8a6d2f);
+  border: 1px solid #a8863b;
+  box-shadow: 0 6px 24px rgba(138,109,47,.35);
+}
+.btn-wikifx:hover {
+  box-shadow: 0 0 34px rgba(200,162,76,.45);
+  transform: translateY(-2px);
+}
+body.theme-night .btn-wikifx {
+  background: linear-gradient(180deg, #d8b45c, #a8863b);
+  border-color: #c8a24c;
+  color: #1c1508;
+}
+
+.profit-fig { max-width: 640px; margin: 0 auto; }
+.profit-card {
+  border: 1px solid var(--line-br);
+  background: var(--bg-soft);
+  box-shadow: 0 30px 90px rgba(0,0,0,.45);
+  padding: 22px;
+}
+.profit-head {
+  display: flex; align-items: center; gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line-br);
+}
+.badge.prem {
+  color: #fff;
+  background: #10b981;
+  border-color: #10b981;
+  border-radius: 6px;
+}
+.profit-body {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 12px 2px;
+  border-bottom: 1px solid var(--line);
+}
+.pf-label { font-family: var(--sans); font-size: 13px; letter-spacing: .14em; color: var(--faint); text-transform: uppercase; }
+.pf-val { font-family: var(--sans); font-size: 26px; font-weight: 700; color: var(--cream); }
+.profit-card picture { display: block; margin-top: 16px; }
+.profit-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.profit-legend {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 14px;
+  font-family: var(--sans); font-size: 13px; letter-spacing: .1em;
+  color: var(--muted);
+}
+.lg-line { display: inline-block; width: 22px; height: 3px; background: #ef4444; border-radius: 2px; }
+.profit-cta { margin-top: 26px; flex-direction: column; align-items: center; gap: 10px; }
+.profit-note { font-size: 14.5px; color: var(--muted); }
+
+/* ---------- paint/scroll optimization ---------- */
+.content-visibility-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .ticker-track { animation: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+}

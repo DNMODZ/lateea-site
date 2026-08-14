@@ -828,6 +828,9 @@ body.theme-night .btn-wikifx {
   gap: 34px;
   align-items: start;
 }
+.profit-grid[hidden] {
+  display: none !important;
+}
 .profit-card.dark-card {
   background: #1e222d;
   border-color: #2c3140;

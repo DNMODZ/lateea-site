@@ -171,6 +171,10 @@
      Telegram เดโม่ — จำลองบอท LateEA ตัวจริง (กดปุ่มได้จริง)
      Menu state machine จาก Build*Menu() ในโค้ด EA
      ============================================================ */
+  // หน้าเวอร์ชันใหม่ (v16-luna-1408.html) มี data-version="1408" → แสดงฟีเจอร์ใหม่เพิ่ม
+  var tgIsLuna1408 = document.body && document.body.getAttribute('data-version') === '1408';
+  var tgNewsImpactHigh = false;   // false = High+Medium (ค่าเริ่มต้นของโค้ด v16deep-1408)
+
   var tgState = 'menu';
   var tgStateParams = null;
   var tgStateCount = 0;
@@ -442,12 +446,24 @@
     tgDelay = 5;
     tgSpreadMax = 80;
     tgNewsFilter = true;
+    tgNewsImpactHigh = false;
     tgDynamicGrid = false;
     tgTrailing = false;
     tgSpreadFilter = true;
     tgHoursEnabled = false;
     tgHoursStart = 0;
     tgHoursEnd = 0;
+
+    // หน้า v16-luna-1408: เพิ่มปุ่ม "ระดับข่าวที่กรอง" ในเมนูเทรดทั่วไป (หน้าเก่าไม่มี)
+    var basic = TG_MENUS.basic.rows;
+    var hasNewsImpact = basic.some(function (r) { return r[1] === '/newsimpact'; });
+    if (tgIsLuna1408 && !hasNewsImpact) {
+      basic.splice(basic.length - 1, 0, ['🎚 ระดับข่าวที่กรอง: High+Medium', '/newsimpact', 'newsimpact', 'basic']);
+    } else if (!tgIsLuna1408 && hasNewsImpact) {
+      for (var i = basic.length - 1; i >= 0; i--) {
+        if (basic[i][1] === '/newsimpact') { basic.splice(i, 1); break; }
+      }
+    }
   }
 
   function tgBoot() {
@@ -487,6 +503,7 @@
         if (row[1] === '/menu_delay') label = '⏳ หน่วงเวลา (Delay): ' + tgDelay + 's';
         if (row[1] === '/dynamicgrid') label = '📊 Dynamic Grid: ' + (tgDynamicGrid ? 'เปิด' : 'ปิด');
         if (row[1] === '/newsfilter') label = '📰 กรองข่าว: ' + (tgNewsFilter ? 'เปิด' : 'ปิด');
+        if (row[1] === '/newsimpact') label = '🎚 ระดับข่าวที่กรอง: ' + (tgNewsImpactHigh ? 'High เท่านั้น' : 'High+Medium');
         if (row[1] === '/menu_maxlot') label = '🔝 เพดาน Max Lot: ' + tgMaxLot.toFixed(2);
         break;
       case 'lotmode':
@@ -603,6 +620,7 @@
       }
       case 'toggle_dg': { tgDynamicGrid = !tgDynamicGrid; msg = tgDynamicGrid ? '✅ Dynamic Grid เปิดแล้ว' : '⏸️ Dynamic Grid ปิดแล้ว'; break; }
       case 'toggle_news': { tgNewsFilter = !tgNewsFilter; msg = tgNewsFilter ? '✅ กรองข่าวเปิดแล้ว — หยุดเปิดไม้ช่วงข่าวแรง' : '⏸️ กรองข่าวปิดแล้ว'; break; }
+      case 'newsimpact': { tgNewsImpactHigh = !tgNewsImpactHigh; msg = tgNewsImpactHigh ? '✅ ระบบหลบข่าวจะกรองเฉพาะ High impact เท่านั้น' : '✅ ระบบหลบข่าวจะกรอง High + Medium'; break; }
       case 'toggle_trail': { tgTrailing = !tgTrailing; msg = tgTrailing ? '✅ Trailing เปิดแล้ว — ตามกำไรอัตโนมัติ' : '⏸️ Trailing ปิดแล้ว'; break; }
       case 'set_lotmode_0': { tgCurLotMode = 0; msg = '✅ ตั้งโหมดคูณล็อต ×1.50 แล้ว'; break; }
       case 'set_lotmode_1': { tgCurLotMode = 1; msg = '✅ ตั้งโหมดบวกทีละ 0.01 แล้ว'; break; }
@@ -634,6 +652,7 @@
         reply.indexOf('status') === 0 ||
         reply.indexOf('account') === 0 ||
         reply.indexOf('calclot') === 0 ||
+        reply.indexOf('newsimpact') === 0 ||
         reply.indexOf('set_') === 0) {
       var msg = tgAction(reply, cmd);
       if (msg) tgAddBubble('bot', msg);

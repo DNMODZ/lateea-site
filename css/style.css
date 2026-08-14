@@ -108,6 +108,15 @@ body {
   transition: color .25s;
 }
 #topbar nav a:hover { color: var(--gold-br); }
+#topbar nav a.nav-other {
+  color: var(--gold-br);
+  font-size: 13px;
+  border: 1px solid var(--line-br);
+  border-radius: 999px;
+  padding: 4px 12px;
+  letter-spacing: .06em;
+}
+#topbar nav a.nav-other:hover { border-color: var(--gold); background: var(--bg-soft); }
 
 /* ---- ปุ่มสลับธีม (emoji) ---- */
 #themeToggle {

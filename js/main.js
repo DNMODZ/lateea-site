@@ -215,6 +215,11 @@
   var tgBasket = 400;
   var tgDelay = 5;
   var tgSpreadMax = 80;
+  var tgFilterCrash = 2000;
+  var tgPairCloseAuto = true;
+  var tgHedgeMinLot = 0.12;
+  var tgDragAlertOn = false;
+  var tgDragAlertPts = 1000;
   var tgNewsFilter = true;
   var tgDynamicGrid = false;
   var tgTrailing = false;
@@ -258,16 +263,23 @@
       title: 'เมนูหลัก — เลือกคำสั่งด้านล่างได้เลยครับ 👇',
       rows: [
         ['⚡ เปิด / ปิด EA', '/ea', 'toggle', '/menu'],
-        ['🟢 ซื้อ (Buy)', '/buy', 'เปิดคำสั่ง BUY XAUUSD 0.01 ล็อต ที่ราคาตลาดแล้ว ✅', '/menu'],
-        ['🔴 ขาย (Sell)', '/sell', 'เปิดคำสั่ง SELL XAUUSD 0.01 ล็อต ที่ราคาตลาดแล้ว ✅', '/menu'],
-        ['♻️ ปิดชดเชย', '/pairclose_offset', 'ปิดคู่ชดเชยอัตโนมัติ (Pair Close Offset) แล้ว', '/menu'],
-        ['❌ ปิดทั้งหมด', '/closeall', 'ปิดตำแหน่งทั้งหมดในพอร์ตแล้ว ✅', '/menu'],
+        ['🟢🔴 เปิด-ปิดไม้พื้นฐาน', '/menu_trade_basic', '', 'tradebasic'],
         ['📊 สถานะ', '/status', 'status', '/menu'],
         ['💳 บัญชี', '/account', 'account', '/menu'],
         ['🧮 ตาราง Lot', '/calclot', 'calclot', '/menu'],
         ['⚙️ ตั้งค่า', '/settings', '⚙️ การตั้งค่า — เลือกหมวดที่ต้องการครับ', 'settings'],
         ['❓ ช่วยเหลือ', '/help', '📖 วิธีใช้ LateEA\n• /menu — เปิดเมนูหลัก\n• กดปุ่มเพื่อสั่งงาน ระบบยืนยันทุกครั้ง\n• คำสั่งบางอย่างต้องใช้ PIN (ล็อค/ปลดล็อค)\n• ติดต่อผู้พัฒนา: guns.lol/lostsky777', '/menu'],
-        ['📋 รายการบัญชีที่อนุญาต', '/account_list', '📋 บัญชีที่อนุญาตให้ใช้\n#86005930 ✅\n#26755980 ✅\n#86006596 ✅\n#21041781 ✅', '/menu']
+        ['📋 รายการบัญชีที่อนุญาต', '/account_list', '📋 บัญชีที่อนุญาตให้ใช้\n#****5930 ✅\n#****5980 ✅\n#****6596 ✅\n#****1781 ✅', '/menu']
+      ]
+    },
+    tradebasic: {
+      title: '🟢🔴 เปิด-ปิดไม้พื้นฐาน\n(เปิด Buy/Sell, ปิดชดเชย, หรือปิดทั้งหมด)',
+      rows: [
+        ['🟢 ซื้อ (Buy)', '/buy', 'เปิดคำสั่ง BUY XAUUSD 0.01 ล็อต ที่ราคาตลาดแล้ว ✅', '/menu'],
+        ['🔴 ขาย (Sell)', '/sell', 'เปิดคำสั่ง SELL XAUUSD 0.01 ล็อต ที่ราคาตลาดแล้ว ✅', '/menu'],
+        ['♻️ ปิดชดเชย', '/pairclose_offset', 'ปิดคู่ชดเชยอัตโนมัติ (Pair Close Offset) แล้ว', '/menu'],
+        ['❌ ปิดทั้งหมด', '/closeall', 'ปิดตำแหน่งทั้งหมดในพอร์ตแล้ว ✅', '/menu'],
+        ['🔙 กลับเมนูหลัก', '/menu', '', 'menu']
       ]
     },
     settings: {
@@ -297,6 +309,7 @@
         ['📊 Dynamic Grid: ปิด', '/dynamicgrid', 'toggle_dg', 'basic'],
         ['ข่าวกรอง: เปิด', '/newsfilter', 'toggle_news', 'basic'],
         ['🔝 เพดาน Max Lot: 0.40', '/menu_maxlot', '🔝 ตั้งเพดานล็อตสูงสุด', 'maxlot'],
+        ['⚠️ Max Drag Alert: ปิด', '/menu_dragalert', '⚠️ แจ้งเตือน Max Drag ต่ำ — ตั้งเกณฑ์เตือนก่อนพอร์ตเจ๊ง', 'dragalert'],
         ['🔙 กลับหน้าตั้งค่า', '/settings', '', 'settings']
       ]
     },
@@ -363,16 +376,41 @@
         ['🔙 กลับหน้าตั้งค่า', '/settings', '', 'settings']
       ]
     },
+    dragalert: {
+      title: '⚠️ แจ้งเตือน Max Drag ต่ำ\n(เตือนผ่าน Telegram เมื่อพอร์ตทนลากได้น้อยกว่าเกณฑ์)\n(💡 พิมพ์กำหนดเองได้ เช่น /dragalert 1200)',
+      rows: [
+        ['เปิด / ปิด', '/dragalert', 'toggle_dragalert', 'dragalert'],
+        ['500 pts', '/dragalert 500', 'set_dragalert_500', 'dragalert'],
+        ['1000 pts', '/dragalert 1000', 'set_dragalert_1000', 'dragalert'],
+        ['1500 pts', '/dragalert 1500', 'set_dragalert_1500', 'dragalert'],
+        ['2000 pts', '/dragalert 2000', 'set_dragalert_2000', 'dragalert'],
+        ['0 (ปิด)', '/dragalert 0', 'set_dragalert_0', 'dragalert'],
+        ['🔙 กลับหน้าตั้งค่า', '/settings', '', 'settings']
+      ]
+    },
     hedge: {
       title: '🛡 Hedge — ระบบเฮดจ์แบบขั้นบันได',
       rows: [
         ['ระบบ Hedge: เปิด', '/hedge_toggle', '✅ ระบบ Hedge เปิดแล้ว', 'hedge'],
+        ['🟦 Hedge เริ่มที่ Lot: 0.12', '/menu_hedgeminlot', '🟦 ตั้งล็อตขั้นต่ำที่ Hedge จะเริ่มทำงาน', 'hedgeminlot'],
         ['🧮 รูปแบบ Lot: %', '/hedge_lot_mode', '✅ เปลี่ยนรูปแบบ Lot เป็นล็อตคงที่แล้ว', 'hedge'],
         ['🟦 L1: 20.00', '/hedge_l1_menu', '🟦 L1 — ตั้งค่าชั้นเฮดจ์แรก', 'hedge'],
         ['🟪 L2: 15.00', '/hedge_l2_menu', '🟪 L2 — ตั้งค่าชั้นเฮดจ์ที่สอง', 'hedge'],
         ['🟥 L3: 10.00', '/hedge_l3_menu', '🟥 L3 — ตั้งค่าชั้นเฮดจ์ที่สาม', 'hedge'],
         ['🎯 Hedge TP: 100 pts', '/menu_hedgetp', '🎯 ตั้งค่า TP ของระบบเฮดจ์', 'hedgetp'],
         ['🔙 กลับหน้าตั้งค่า', '/settings', '', 'settings']
+      ]
+    },
+    hedgeminlot: {
+      title: '🟦 ล็อตขั้นต่ำที่ Hedge จะเริ่มทำงาน\n(ไม้หลักยังไม่ถึงล็อตนี้ → ยังไม่เปิดไม้ hedge)',
+      rows: [
+        ['เริ่มทันที (0)', '/hedgeminlot 0', 'set_hedgeminlot_0', 'hedgeminlot'],
+        ['0.05', '/hedgeminlot 0.05', 'set_hedgeminlot_0.05', 'hedgeminlot'],
+        ['0.10', '/hedgeminlot 0.10', 'set_hedgeminlot_0.10', 'hedgeminlot'],
+        ['0.12', '/hedgeminlot 0.12', 'set_hedgeminlot_0.12', 'hedgeminlot'],
+        ['0.15', '/hedgeminlot 0.15', 'set_hedgeminlot_0.15', 'hedgeminlot'],
+        ['0.20', '/hedgeminlot 0.20', 'set_hedgeminlot_0.20', 'hedgeminlot'],
+        ['🔙 กลับเมนู Hedge', '/menu_hedge_cat', '', 'hedge']
       ]
     },
     hedgetp: {
@@ -389,7 +427,7 @@
       rows: [
         ['🟦 เริ่ม Pair Close (กี่ไม้)', '/menu_pairclose', '🟦 ตั้งจำนวนไม้ที่เริ่มปิดชดเชย', 'pairclose'],
         ['🟨 ขั้นต่ำปิดชดเชย (กี่ไม้)', '/menu_offsetpairclose', '🟨 ตั้งจำนวนไม้ขั้นต่ำสำหรับปิดชดเชย', 'pairclose'],
-        ['♻️ ปิดชดเชยอัตโนมัติ: เปิด', '/pairclose_auto', '✅ ปิดชดเชยอัตโนมัติ เปิดแล้ว', 'pairclose'],
+        ['♻️ ปิดชดเชยอัตโนมัติ: เปิด', '/pairclose_auto', 'toggle_pairclose_auto', 'pairclose'],
         ['🔙 กลับหน้าตั้งค่า', '/settings', '', 'settings']
       ]
     },
@@ -431,9 +469,21 @@
       title: '🛡 กรองกระชาก — กันเปิดไม้ช่วงราคาวิ่งแรง',
       rows: [
         ['RSI: 14 · 25/75', '/filter_rsi', '✅ ตั้งค่า RSI Oversold 25 / Overbought 75 แล้ว', 'filter'],
-        ['กัน Candle กระชาก: 2000 pts', '/filter_crash', '✅ เปิดกันราคากระชาก 2000 จุดแล้ว', 'filter'],
+        ['🔥 จุดกระชาก: 2000 pts', '/menu_filtercrash', '🔥 ตั้งจุดกระชาก (Crash Candle Points):\nราคาวิ่งเกินกี่จุดใน 3 นาที → หยุดเปิดไม้ใหม่', 'filtercrash'],
         ['เปิด/ปิด', '/filter_toggle', '✅ สลับการกรองแล้ว', 'filter'],
         ['🔙 กลับหน้าตั้งค่า', '/settings', '', 'settings']
+      ]
+    },
+    filtercrash: {
+      title: '🔥 จุดกระชาก (Crash Candle Points)\n(พิมพ์ /filtercrash 2500 เพื่อกำหนดเองได้)',
+      rows: [
+        ['1000 pts', '/filtercrash 1000', 'set_filtercrash_1000', 'filtercrash'],
+        ['1500 pts', '/filtercrash 1500', 'set_filtercrash_1500', 'filtercrash'],
+        ['2000 pts', '/filtercrash 2000', 'set_filtercrash_2000', 'filtercrash'],
+        ['2500 pts', '/filtercrash 2500', 'set_filtercrash_2500', 'filtercrash'],
+        ['3000 pts', '/filtercrash 3000', 'set_filtercrash_3000', 'filtercrash'],
+        ['5000 pts', '/filtercrash 5000', 'set_filtercrash_5000', 'filtercrash'],
+        ['🔙 กลับกรองกระชาก', '/menu_filter', '', 'filter']
       ]
     },
     spread: {
@@ -473,6 +523,11 @@
     tgBasket = 400;
     tgDelay = 5;
     tgSpreadMax = 80;
+    tgFilterCrash = 2000;
+    tgPairCloseAuto = true;
+    tgHedgeMinLot = 0.12;
+    tgDragAlertOn = false;
+    tgDragAlertPts = 1000;
     tgNewsFilter = true;
     tgNewsImpactHigh = false;
     tgDynamicGrid = false;
@@ -557,6 +612,21 @@
       case 'spread':
         if (row[1] === '/spreadmax ' + tgSpreadMax) label = row[0] + ' ✅';
         break;
+      case 'pairclose':
+        if (row[1] === '/pairclose_auto') label = '♻️ ปิดชดเชยอัตโนมัติ: ' + (tgPairCloseAuto ? 'เปิด' : 'ปิด');
+        break;
+      case 'hedge':
+        if (row[1] === '/menu_hedgeminlot') label = '🟦 Hedge เริ่มที่ Lot: ' + (tgHedgeMinLot > 0 ? tgHedgeMinLot.toFixed(2) : 'เริ่มทันที');
+        break;
+      case 'hedgeminlot':
+        if (row[1] === '/hedgeminlot ' + (tgHedgeMinLot === 0 ? '0' : tgHedgeMinLot.toFixed(2))) label = row[0] + ' ✅';
+        break;
+      case 'filter':
+        if (row[1] === '/menu_filtercrash') label = '🔥 จุดกระชาก: ' + tgFilterCrash + ' pts';
+        break;
+      case 'filtercrash':
+        if (row[1] === '/filtercrash ' + tgFilterCrash) label = row[0] + ' ✅';
+        break;
       case 'hours':
         if (row[1] === '/hours off') label = '⏰ เปิดตลอด 24 ชม.' + (!tgHoursEnabled ? ' ✅' : '');
         break;
@@ -618,7 +688,8 @@
           'Spread: เปิด / ' + tgSpreadMax + ' pts\n' +
           'Drawdown Lock: ปิด\n' +
           'Recovery: ปิด (x2.0)\n' +
-          'Filter: ' + (tgNewsFilter ? 'เปิด' : 'ปิด') + '\n' +
+          'Filter: ' + (tgNewsFilter ? 'เปิด' : 'ปิด') + ' (crash ' + tgFilterCrash + ' pts)\n' +
+          'Hedge: ปิด\n' +
           'Trailing: ' + (tgTrailing ? 'เปิด' : 'ปิด') + '\n' +
           'Dynamic Grid: ' + (tgDynamicGrid ? 'เปิด' : 'ปิด') + '\n' +
           '──────────────\n' +
@@ -641,7 +712,8 @@
         var mode_text = TG_LOT_NAMES[tgCurLotMode];
         msg = '🧮 ตารางคำนวณ Lot ล่วงหน้า (30 ไม้)\n' +
               'โหมด: ' + mode_text + '\n' +
-              'เพดาน Max Lot: ' + tgMaxLot.toFixed(2) + '\n\n';
+              'เพดาน Max Lot: ' + tgMaxLot.toFixed(2) + '\n' +
+              '(พิมพ์ /calclot <จำนวน> กำหนดจำนวนไม้เองได้ — สูงสุด 100 ไม้)\n\n';
         var total = 0;
         for (var i = 0; i < 30; i++) {
           var lot = tgNextLot(i);
@@ -656,7 +728,9 @@
       case 'toggle_dg': { tgDynamicGrid = !tgDynamicGrid; msg = tgDynamicGrid ? '✅ Dynamic Grid เปิดแล้ว' : '⏸️ Dynamic Grid ปิดแล้ว'; break; }
       case 'toggle_news': { tgNewsFilter = !tgNewsFilter; msg = tgNewsFilter ? '✅ กรองข่าวเปิดแล้ว — หยุดเปิดไม้ช่วงข่าวแรง' : '⏸️ กรองข่าวปิดแล้ว'; break; }
       case 'newsimpact': { tgNewsImpactHigh = !tgNewsImpactHigh; msg = tgNewsImpactHigh ? '✅ ระบบหลบข่าวจะกรองเฉพาะ High impact เท่านั้น' : '✅ ระบบหลบข่าวจะกรอง High + Medium'; break; }
+      case 'toggle_dragalert': { tgDragAlertOn = !tgDragAlertOn; msg = tgDragAlertOn ? '✅ Max Drag Alert เปิดแล้ว — เตือนเมื่อทนลากได้ต่ำกว่า ' + tgDragAlertPts + ' pts' : '⏸️ Max Drag Alert ปิดแล้ว'; break; }
       case 'toggle_trail': { tgTrailing = !tgTrailing; msg = tgTrailing ? '✅ Trailing เปิดแล้ว — ตามกำไรอัตโนมัติ' : '⏸️ Trailing ปิดแล้ว'; break; }
+      case 'toggle_pairclose_auto': { tgPairCloseAuto = !tgPairCloseAuto; msg = tgPairCloseAuto ? '✅ ปิดชดเชยอัตโนมัติ เปิดแล้ว' : '⏸️ ปิดชดเชยอัตโนมัติ ปิดแล้ว'; break; }
       case 'set_lotmode_0': { tgCurLotMode = 0; msg = '✅ ตั้งโหมดคูณล็อต ×1.50 แล้ว'; break; }
       case 'set_lotmode_1': { tgCurLotMode = 1; msg = '✅ ตั้งโหมดบวกทีละ 0.01 แล้ว'; break; }
       case 'set_lotmode_2': { tgCurLotMode = 2; msg = '✅ ตั้งโหมดบวก 0.01 ทุก 2 ไม้ แล้ว'; break; }
@@ -669,6 +743,9 @@
         else if (action.indexOf('set_delay_') === 0) { tgDelay = parseInt(action.slice(9), 10); msg = '✅ ตั้งหน่วง ' + tgDelay + ' วินาทีแล้ว'; }
         else if (action.indexOf('set_maxlot_') === 0) { tgMaxLot = parseFloat(action.slice(10)); msg = '✅ ตั้งเพดานล็อต ' + tgMaxLot.toFixed(2) + ' แล้ว'; }
         else if (action.indexOf('set_spread_') === 0) { tgSpreadMax = parseInt(action.slice(10), 10); msg = '✅ ตั้งสเปรดสูงสุด ' + tgSpreadMax + ' จุดแล้ว'; }
+        else if (action.indexOf('set_filtercrash_') === 0) { tgFilterCrash = parseInt(action.slice(16), 10); msg = '✅ ตั้งจุดกระชากเป็น ' + tgFilterCrash + ' pts แล้ว'; }
+        else if (action.indexOf('set_hedgeminlot_') === 0) { tgHedgeMinLot = parseFloat(action.slice(16)); msg = '✅ Hedge จะเริ่มทำงานเมื่อไม้หลักถึง: ' + (tgHedgeMinLot > 0 ? tgHedgeMinLot.toFixed(2) + ' Lot' : 'ไม้แรก (เริ่มทันที)'); }
+        else if (action.indexOf('set_dragalert_') === 0) { tgDragAlertPts = parseInt(action.slice(14), 10); tgDragAlertOn = tgDragAlertPts > 0; msg = tgDragAlertPts > 0 ? '✅ ตั้งเกณฑ์ Max Drag Alert เป็น ' + tgDragAlertPts + ' pts แล้ว' : '✅ ปิดการเตือน Max Drag แล้ว'; }
         break;
     }
     return msg;
@@ -700,7 +777,7 @@
 
     // ไปเมนูอื่น
     if (next === '/menu') {
-      tgAddBubble('bot', reply);
+      if (reply) tgAddBubble('bot', reply);
       tgState = 'menu';
       tgStateCount = 0;
       tgRenderMenu('menu');
@@ -736,6 +813,139 @@
     }
   }
 
+  /* ============================================================
+     ดาวน์โหลด EA — ยืนยันเลขบัญชีก่อนโหลด (กันคนที่ไม่ใช่ลูกค้า)
+     - กรอกเลขบัญชีถูกต้อง → redirect ไปลิงก์ดาวน์โหลด
+     - ผิด 3 ครั้ง → ล็อก 60 วินาที (จำผ่าน localStorage — รีเฟรชไม่หาย)
+     หมายเหตุ: เป็นการป้องกันฝั่ง client กันคนทั่วไปได้ แต่กันคนที่อ่านโค้ดไม่ได้ 100%
+     ============================================================ */
+  var DL_ACCOUNTS = ['86005930', '26755980', '86006596', '21041781'];
+  // ลิงก์ดาวน์โหลดถูกเข้ารหัส (base64 + กลับด้าน) — กันหาเจอจาก source ง่ายๆ ถอดรหัสตอนกดเท่านั้น
+  var DL_URL = (function () {
+    var rev = '==QQF9SbtFjayAHd0QTdkdmbvIXZkx2bm9SbvNmLlJXamFWakVWbuc3d39yL6MHc0RHa';
+    return atob(rev.split('').reverse().join(''));
+  })();
+  var DL_TRIES_KEY = 'lateea_dl_tries';
+  var DL_LOCK_KEY  = 'lateea_dl_lock';
+  var DL_MAX_TRIES = 3;
+  var DL_LOCK_MS   = 60 * 1000;
+
+  function initDownload() {
+    var btn = document.getElementById('dlBtn');
+    var modal = document.getElementById('dlModal');
+    var closeBtn = document.getElementById('dlClose');
+    var input = document.getElementById('dlInput');
+    var go = document.getElementById('dlGo');
+    var msg = document.getElementById('dlMsg');
+    var hint = document.getElementById('dlHint');
+    if (!btn || !modal || !input || !go) return;
+
+    function loadInt(key) {
+      try { var v = parseInt(localStorage.getItem(key) || '0', 10); return isNaN(v) ? 0 : v; } catch (e) { return 0; }
+    }
+    function saveInt(key, v) { try { localStorage.setItem(key, String(v)); } catch (e) {} }
+    function lockRemaining() {
+      try {
+        var end = parseInt(localStorage.getItem(DL_LOCK_KEY) || '0', 10);
+        if (!end) return 0;
+        var rem = end - Date.now();
+        return rem > 0 ? rem : 0;
+      } catch (e) { return 0; }
+    }
+    function setLock() {
+      saveInt(DL_LOCK_KEY, Date.now() + DL_LOCK_MS);
+      saveInt(DL_TRIES_KEY, 0);   // ล็อกหมด → เริ่มนับใหม่
+    }
+    function clearLock() { try { localStorage.removeItem(DL_LOCK_KEY); } catch (e) {} }
+
+    var timer = null;
+    function renderLockState() {
+      var rem = lockRemaining();
+      var sec = Math.max(0, Math.ceil(rem / 1000));
+      if (rem > 0) {
+        btn.disabled = true;
+        btn.textContent = 'รอ ' + sec + ' วิ';
+        if (hint) hint.innerHTML = 'กรอกเลขบัญชีผิดเกิน 3 ครั้ง — กรุณารอ <b>' + sec + ' วินาที</b> ก่อนลองใหม่';
+        input.classList.add('is-locked');
+        go.classList.add('is-locked');
+        msg.className = 'dl-modal-msg';
+        msg.textContent = '🚫 ล็อกชั่วคราว — กรุณารออีก ' + sec + ' วินาที';
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'โหลด EA';
+        if (hint) hint.innerHTML = 'กดปุ่ม แล้วกรอก<b>เลขบัญชี MetaTrader</b> ของคุณเพื่อยืนยัน — ระบบกันคนที่ไม่ใช่ลูกค้า';
+        input.classList.remove('is-locked');
+        go.classList.remove('is-locked');
+      }
+    }
+    function startCountdown() {
+      if (timer) { clearInterval(timer); timer = null; }
+      renderLockState();
+      if (lockRemaining() > 0) {
+        timer = setInterval(function () {
+          renderLockState();
+          if (lockRemaining() <= 0) { clearInterval(timer); timer = null; }
+        }, 1000);
+      }
+    }
+
+    function openModal() {
+      modal.hidden = false;
+      input.value = '';
+      msg.className = 'dl-modal-msg';
+      msg.textContent = '';
+      startCountdown();
+      if (lockRemaining() <= 0) input.focus();
+    }
+    function closeModal() { modal.hidden = true; }
+
+    btn.addEventListener('click', openModal);
+    // ปุ่มดาวน์โหลดอื่นๆ ที่มี data-open-dl (เช่น ที่ hero หน้าแรก) — เปิด modal เดียวกัน
+    var extraTriggers = document.querySelectorAll('[data-open-dl]');
+    for (var i = 0; i < extraTriggers.length; i++) {
+      extraTriggers[i].addEventListener('click', openModal);
+    }
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+
+    function submit() {
+      if (lockRemaining() > 0) return;
+      var val = (input.value || '').trim();
+      if (!val) {
+        msg.className = 'dl-modal-msg';
+        msg.textContent = '❌ กรุณากรอกเลขบัญชีก่อน';
+        return;
+      }
+      if (DL_ACCOUNTS.indexOf(val) >= 0) {
+        clearLock();
+        saveInt(DL_TRIES_KEY, 0);
+        msg.className = 'dl-modal-msg is-ok';
+        msg.textContent = '✅ ยืนยันสำเร็จ กำลังไปยังลิงก์ดาวน์โหลด...';
+        btn.disabled = true;   // กันกดซ้ำระหว่าง redirect
+        setTimeout(function () { window.location.href = DL_URL; }, 600);
+        return;
+      }
+      var tries = loadInt(DL_TRIES_KEY) + 1;
+      var left = DL_MAX_TRIES - tries;
+      if (left <= 0) {
+        setLock();
+        msg.className = 'dl-modal-msg';
+        msg.textContent = '🚫 กรอกผิดเกิน ' + DL_MAX_TRIES + ' ครั้ง — ล็อก ' + (DL_LOCK_MS / 1000) + ' วินาที';
+        startCountdown();
+      } else {
+        saveInt(DL_TRIES_KEY, tries);
+        msg.className = 'dl-modal-msg';
+        msg.textContent = '❌ เลขบัญชีไม่ถูกต้อง (เหลืออีก ' + left + ' ครั้ง)';
+      }
+    }
+
+    go.addEventListener('click', submit);
+    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); submit(); } });
+
+    // เช็คสถานะล็อกตั้งแต่โหลดหน้า (รีเฟรชแล้วยังจำได้)
+    startCountdown();
+  }
+
   window.addEventListener('DOMContentLoaded', function () {
     initTheme();
     initRiskToggle();
@@ -745,5 +955,6 @@
     initTopbar();
     initTelegram();
     initCopy();
+    initDownload();
   });
 })();

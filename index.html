@@ -28,6 +28,7 @@
     <a href="#telegram">Telegram</a>
     <a href="#install">ติดตั้ง</a>
     <a href="#version">เวอร์ชัน</a>
+    <a href="#download">ดาวน์โหลด</a>
     <a href="#warning">ความเสี่ยง</a>
     <a href="https://guns.lol/lostsky777" target="_blank" rel="noopener">ติดต่อ</a>
   </nav>
@@ -60,6 +61,7 @@
       <a class="btn btn-solid" href="#spec">ดูฟีเจอร์</a>
       <a class="btn btn-ghost" href="#screen">ชมหน้าจอจริง</a>
       <a class="btn btn-ghost" href="#profit">ดูกำไร EA</a>
+      <button type="button" class="btn btn-solid dl-btn" data-open-dl>ดาวน์โหลดไฟล์</button>
     </div>
     <div class="theme-switch-wrap">
       <span class="ts-label">กลางวัน</span>
@@ -390,7 +392,7 @@
       <li><span class="tag">แก้</span> ระบบ "Anti-Hedge Domination" (บังคับเปิดไม้สวน) ไม่เคยทำงาน — นับ hedge แบบขั้นบันได (H1_/H2_/H3_) ได้แล้ว</li>
       <li><span class="tag">แก้</span> input TieredHedgeL1/L2/L3 (20/15/10) ไม่ถูกใช้เลย — ระบบใช้ค่าฮาร์ดโค้ด 35/28/21 — ต่อสาย input เข้าสู่ runtime แล้ว</li>
       <li><span class="tag">แก้</span> โหมด Hedge Lot คงที่ อันตราย — เดิม NormalizeLot โดนเพดานจนทุกชั้นกลายเป็น Max Lot (0.40) — ตอนนี้ 20/15/10% = 0.20/0.15/0.10 ตามที่ตั้ง</li>
-      <li><span class="tag">แก้</span> Hedge เริ่มทำงานช้า — เดิมต้องรอไม้หลักถึง 0.1 ล็อต (~ไม้ 19) — ตอนนี้เริ่มตั้งแต่ไม้แรก</li>
+      <li><span class="tag">ใหม่</span> Hedge ปิดโดยค่าเริ่มต้น — เปิดไม้หลักล้วนๆ ไม่มีไม้สวนมาประกบ + ตั้งเกตล็อตขั้นต่ำที่ hedge จะเริ่มทำงานได้เอง (/hedgeminlot ค่าเริ่มต้น 0.12, 0 = เริ่มทันที)</li>
       <li><span class="tag">แก้</span> เปิดจำกัดเวลา /hours on แล้วปิดเทรดเงียบๆ ทั้งวัน — ถ้ายังไม่ตั้งเวลาจะตั้งเริ่มต้น 08:00–22:00 ให้อัตโนมัติ</li>
       <li><span class="tag">แก้</span> /newsfilter เปรียบเทียบตัวพิมพ์ใหญ่-เล็กผิด — ปรับเป็น case-insensitive</li>
       <li><span class="tag">แก้</span> แดชบอร์ดอัปเดตทุก tick เปลือง CPU — ย้ายไปอัปเดตผ่าน Timer</li>
@@ -401,12 +403,125 @@
       <li><span class="tag">ใหม่</span> จำกัด Dynamic Hedge TP ไม่ให้ไกลเกินจริง (clamp 600 จุด)</li>
       <li><span class="tag">ใหม่</span> Hedge ผ่านตัวกรองเดียวกับไม้หลัก — ไม่เปิดช่วงข่าว/นอกเวลาซื้อขาย/สเปรดสูง/DD lock</li>
       <li><span class="tag">ใหม่</span> ลบ dead code (CheckDrawdownLockReset, CountHedgePositions) — โค้ดสะอาด คอมไพล์ 0 error 0 warning</li>
+      <li><span class="tag">ใหม่</span> ตั้งจุดกระชากเองได้ (/filtercrash) — กรองราคาวิ่งแรงกี่จุดก็ตั้งผ่าน Telegram ได้ จำข้าม restart</li>
+      <li><span class="tag">ใหม่</span> ตาราง Lot กำหนดจำนวนไม้เองได้ (/calclot 50) — สูงสุด 100 ไม้ เกินกำหนดระบบแจ้งเตือน</li>
+      <li><span class="tag">ใหม่</span> รวมปุ่ม ซื้อ/ขาย/ปิดทั้งหมด/ปิดชดเชย เป็นเมนูเดียว "เปิด-ปิดไม้พื้นฐาน" — เมนูหลักสั้นลง เข้าถึงเร็วขึ้น</li>
+      <li><span class="tag">ใหม่</span> Pair Close เริ่มที่ 7 ไม้ (ค่าเริ่มต้น) — ปิดชดเชยถี่ขึ้น แบกไม้ติดลบน้อยลง</li>
     </ul>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="sec content-visibility-section" id="faq">
+    <p class="sec-num">08 — คำถามที่พบบ่อย</p>
+    <h2>ทำไมเปิดไม้แล้วมี <em>sell</em> มาด้วย?</h2>
+    <p class="sec-lede">คำถามที่เจอบ่อยที่สุด — รวมคำตอบเรื่องระบบ Hedge และวิธีปิด/ตั้งเกตให้ตรงกับสไตล์ตัวเอง</p>
+    <div class="faq-list">
+      <details class="faq-item" open>
+        <summary>ทำไมเปิดไม้แรกแล้วมี sell มาด้วยพร้อมกัน?</summary>
+        <div class="faq-body">
+          <p>ไม่ใช่ระบบขายขาดทุน (Sell Stop) — คือ<b>ระบบ Hedge (Tiered Ping-Pong)</b> ที่ EA เปิดไม้ฝั่งตรงข้ามประกบไม้หลักอัตโนมัติ เพื่อกันความเสี่ยงตอนราคาวิ่งไปทางเดียว และเก็บกำไรตอนราคาย่อกลับ</p>
+          <p>เวอร์ชันใหม่<b>ปิดระบบนี้เป็นค่าเริ่มต้นแล้ว</b> — ถ้าปิดอยู่ เปิดไม้ 0.01 buy จะมีแค่ buy ไม่มี sell มาแทรก ถ้าเห็น buy/sell พร้อมกัน แปลว่าเปิด Hedge อยู่</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>จะปิดระบบ Hedge ยังไง?</summary>
+        <div class="faq-body">
+          <p>พิมพ์ <code>/menu_hedge_cat</code> ใน Telegram แล้วกดปุ่ม <b>ระบบ Hedge</b> สลับเป็นปิด — เวอร์ชันใหม่ค่าเริ่มต้นปิดอยู่แล้ว ไม่ต้องแตะอะไรถ้าไม่อยากใช้</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>อยากให้ Hedge เริ่มเฉพาะเมื่อไม้หลักถึงล็อตที่กำหนด (เช่น 0.12) ได้ไหม?</summary>
+        <div class="faq-body">
+          <p>ได้ — พิมพ์ <code>/hedgeminlot 0.12</code> ไม้หลักยังไม่ถึง 0.12 ล็อต → ยังไม่เปิด hedge เลย ใส่ <code>0</code> = เริ่มทันที ตั้งแล้วจำข้าม restart</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>ควรฝากเงินเท่าไหร่ถึงจะเริ่มใช้ได้?</summary>
+        <div class="faq-body">
+          <p>เริ่มต้นเท่าไหร่ก็ได้ — แต่<b>ยิ่งมีเงินทุนเยอะ ความเสี่ยงยิ่งน้อย</b> แนะนำ<b>500 ดอลลาร์ขึ้นไป</b></p>
+          <p>เพราะพอร์ตยิ่งมีเงินเยอะ ระบบยิ่งมีระยะทนลาก (MAX DRAG) มาก ไม้ที่เปิดไปยิ่งมีพื้นที่ให้ราคาย่อกลับก่อนถึงจุดตัดขาดทุน โอกาสโดน margin call ก็ยิ่งน้อยลง</p>
+          <p>เริ่มต้นแนะนำไม้แรก <b>0.01</b> โหมดล็อตเล็ก แล้วค่อยปรับตามผลเทสต์บนบัญชีเดโม่ก่อนใช้เงินจริง</p>
+          <table class="faq-table">
+            <thead>
+              <tr><th>เงินทุน</th><th>ล็อตเริ่มต้นที่แนะนำ</th><th>สไตล์</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>500$ ขึ้นไป</td><td>0.01</td><td>ปลอดภัยสุด</td></tr>
+              <tr><td>1,000$</td><td>0.02</td><td>ปลอดภัย</td></tr>
+              <tr><td>2,000$</td><td>0.03 – 0.05</td><td>สมดุล</td></tr>
+              <tr><td>5,000$ ขึ้นไป</td><td>0.05 – 0.07</td><td>โตไว รับเสี่ยงได้</td></tr>
+            </tbody>
+          </table>
+          <p class="faq-note">ล็อตเริ่มต้นสูงสุดที่ EA รองรับคือ 0.07 — เริ่มน้อยไว้ก่อน แล้วค่อยเพิ่มเมื่อชินกับระบบ</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>พิมพ์ PIN แล้วเมนูไม่ขึ้น (บอทไม่ตอบ) ต้องตรวจอะไรบ้าง?</summary>
+        <div class="faq-body">
+          <p>ไล่ตรวจ 3 อย่างตามลำดับ — ส่วนใหญ่ติดข้อ 1 หรือ 2:</p>
+          <p><b>1. โทเคนบอทถูกไหม?</b> — ตรวจช่อง <code>TelegramBotToken</code> ใน EA Properties → Inputs ต้องเป็นโทเคนเต็มจาก @BotFather (รูปแบบ <code>123456789:AA...</code>)</p>
+          <p><b>2. Allow WebRequest ครบไหม?</b> — Tools → Options → Expert Advisors → ติ๊ก <b>Allow WebRequest for listed URL</b> แล้วเพิ่ม <code>https://api.telegram.org</code> กับ <code>https://nfs.faireconomy.media</code> ให้ครบ 3 บรรทัด (รวม <code>http://nfs.faireconomy.media</code>)</p>
+          <p><b>3. Allow Algo Trading เปิดไหม?</b> — ปุ่มบน toolbar ต้องเป็นสีเขียว + ติ๊ก Allow Algo Trading ตอนลาก EA ลงชาร์ต</p>
+          <p>ตรวจครบแล้วเปิดแท็บ <b>Experts</b> ใน MT5 — ควรเห็นบรรทัดตรวจสอบ Telegram ตอน EA เริ่มทำงาน ถ้ายังเงียบแปลว่าข้อความยังไม่ออกจากเครื่อง ตั้ง PIN ใหม่แล้วพิมพ์ <code>/pin &lt;รหัส&gt;</code> ในแชทบอท 1 ครั้งก่อน</p>
+        </div>
+      </details>
+      <details class="faq-item" id="faq-4014">
+        <summary>เจอ Error 4014 (WebRequest) ต้องทำยังไง?</summary>
+        <div class="faq-body">
+          <p>Error <b>4014</b> = MT5 บล็อกคำขอ WebRequest เพราะ URL ยังไม่ถูกเพิ่มในรายการอนุญาต — วิธีแก้:</p>
+          <p>เปิดเมนู <b>Tools → Options → Expert Advisors</b> → ติ๊ก <b>Allow WebRequest for listed URL</b> → กดปุ่ม <b>+</b> สีเขียว แล้วเพิ่มให้ครบ <b>3 บรรทัด</b>:</p>
+          <p><code>https://api.telegram.org</code> — รับ/ส่งข้อความกับบอท<br>
+          <code>https://nfs.faireconomy.media</code> — ปฏิทินข่าว<br>
+          <code>http://nfs.faireconomy.media</code> — ปฏิทินข่าว (http)</p>
+          <p>กด OK แล้ว<b>ลาก EA ลงชาร์ตใหม่</b> (หรือปิด-เปิดชาร์ต) — Error 4014 ควรหายทันที ถ้ายังขึ้นอยู่ แปลว่าพิมพ์ URL ผิดตัว/ผิดบรรทัด</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>ใช้บอทเดียวกับหลายบัญชีได้ไหม?</summary>
+        <div class="faq-body">
+          <p>ไม่ได้ — ระบบออกแบบมาให้<b>หนึ่งบอทต่อหนึ่งบัญชี</b> (หนึ่งโทเคนต่อหนึ่งลูกค้า) เพราะบอทผูกกับเลขบัญชีที่ล็อกในไฟล์ EA (ฝังตอนคอมไพล์) ถ้าเอาโทเคนเดียวกันไปใส่หลายเครื่อง/หลายบัญชี จะสั่งงานสลับกัน ข้อความข้ามกันจนควบคุมไม่ได้</p>
+          <p>ถ้ามีหลายบัญชี (เช่น เดโม่ + บัญชีจริง) ให้สร้างบอทใหม่ผ่าน <b>@BotFather</b> แล้วใช้โทเคนแยกกัน — ไฟล์สถานะของ EA แยกตามเลขบัญชีอยู่แล้ว ไม่ชนกัน</p>
+        </div>
+      </details>
+    </div>
+    <div class="faq-check">
+      <h3>✅ Checklist ตั้งค่าเริ่มต้นก่อนใช้งาน</h3>
+      <ul>
+        <li><span class="box"></span><span class="txt"><b>โทเคนบอท</b> — ใส่ <code>TelegramBotToken</code> เต็มจาก @BotFather</span></li>
+        <li><span class="box"></span><span class="txt"><b>PIN</b> — ตั้ง <code>TelegramPin</code> เองใน Inputs</span></li>
+        <li><span class="box"></span><span class="txt"><b>Allow WebRequest</b> — ติ๊ก + เพิ่ม 3 URL (<a href="#faq-4014">ดูข้อ 4014</a>)</span></li>
+        <li><span class="box"></span><span class="txt"><b>Allow Algo Trading</b> — ปุ่มสีเขียว + ติ๊กตอนลาก EA ลงชาร์ต</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= DOWNLOAD ================= -->
+  <section class="sec content-visibility-section" id="download">
+    <p class="sec-num">09 — ดาวน์โหลด EA</p>
+    <h2>ดาวน์โหลด <em>V16-Luna-1408</em></h2>
+    <p class="sec-lede">ไฟล์ EA พร้อมใช้ — ล็อกเลขบัญชีของคุณในตัวไฟล์แล้ว พร้อมระบบยืนยันก่อนโหลดเพื่อความปลอดภัย</p>
+
+    <div class="dl-card">
+      <div class="dl-head">
+        <span class="p-name">v16luna-1408.ex5</span>
+        <span class="badge prem">ล่าสุด</span>
+      </div>
+      <ul class="dl-list">
+        <li>✅ EA หลักสำหรับรันจริง (live/demo) — กริด/เฮดจ์ XAUUSD สั่งงานผ่าน Telegram</li>
+        <li>✅ ไฟล์ <b>Backtest_v16luna-1408.ex5</b> แถมในโฟลเดอร์เดียวกัน สำหรับทดสอบใน Strategy Tester</li>
+        <li>✅ ล็อกเลขบัญชีของคุณในตัวไฟล์แล้ว — บัญชีอื่นเปิดไม่ได้</li>
+        <li>✅ วิธีติดตั้งครบอยู่ในหน้า <a href="#install">วิธีติดตั้ง</a> ด้านบน</li>
+      </ul>
+      <div class="dl-actions">
+        <button type="button" class="btn btn-solid dl-btn" id="dlBtn">โหลด EA</button>
+        <p class="dl-hint" id="dlHint">กดปุ่ม แล้วกรอก<b>เลขบัญชี MetaTrader</b> ของคุณเพื่อยืนยัน — ระบบกันคนที่ไม่ใช่ลูกค้า</p>
+      </div>
+    </div>
   </section>
 
   <!-- ================= WARNING ================= -->
   <section class="sec content-visibility-section" id="warning">
-    <p class="sec-num">08 — ก่อนใช้</p>
+    <p class="sec-num">10 — ก่อนใช้</p>
     <h2>คำเตือนความเสี่ยง</h2>
     <div class="plate warn-plate">
       <p>การเทรด XAUUSD มีความเสี่ยงสูง อาจสูญเสียเงินต้นทั้งหมดได้
@@ -419,6 +534,18 @@
   </section>
 
 </main>
+
+<!-- ===== Modal ยืนยันเลขบัญชีก่อนโหลด EA ===== -->
+<div class="dl-modal" id="dlModal" hidden>
+  <div class="dl-modal-card" role="dialog" aria-modal="true" aria-labelledby="dlModalTitle">
+    <button type="button" class="dl-modal-close" id="dlClose" aria-label="ปิดหน้าต่าง">✕</button>
+    <h3 id="dlModalTitle">🔒 ยืนยันเลขบัญชี (Login)</h3>
+    <p class="dl-modal-sub">กรอกเลขบัญชี MetaTrader 5 ของคุณ (ตัวเลขเท่านั้น)</p>
+    <input type="text" inputmode="numeric" id="dlInput" placeholder="เช่น 123456" autocomplete="off" aria-label="เลขบัญชี">
+    <p class="dl-modal-msg" id="dlMsg" role="alert"></p>
+    <button type="button" class="btn btn-solid dl-go" id="dlGo">โหลด EA</button>
+  </div>
+</div>
 
 <footer>
   <div class="foot-line"></div>

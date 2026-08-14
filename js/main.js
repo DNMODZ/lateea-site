@@ -427,7 +427,31 @@
     }
   };
 
+  // กลับไปค่าเริ่มต้นของเดโม่ (เหมือนเปิดหน้าใหม่ครั้งแรก)
+  function tgResetState() {
+    tgState = 'menu';
+    tgStateParams = null;
+    tgStateCount = 0;
+    tgEAOn = true;
+    tgCurLotMode = 2;
+    tgStartLot = 0.01;
+    tgMaxLot = 0.40;
+    tgMultiplier = 1.5;
+    tgDistance = 280;
+    tgBasket = 400;
+    tgDelay = 5;
+    tgSpreadMax = 80;
+    tgNewsFilter = true;
+    tgDynamicGrid = false;
+    tgTrailing = false;
+    tgSpreadFilter = true;
+    tgHoursEnabled = false;
+    tgHoursStart = 0;
+    tgHoursEnd = 0;
+  }
+
   function tgBoot() {
+    tgResetState();
     tgAddBubble('bot', 'ยินดีต้อนรับครับ พิมพ์ <b>/menu</b> เพื่อดูปุ่มใช้งาน');
     tgAddBubble('me', '/menu');
     tgAddBubble('bot', TG_MENUS.menu.title);
@@ -614,7 +638,7 @@
       var msg = tgAction(reply, cmd);
       if (msg) tgAddBubble('bot', msg);
       // กลับไปหน้าเดิม (ค่าเปลี่ยน → label ใหม่)
-      tgState = next && TG_MENUS[next] ? next : 'settings';
+      tgState = next && TG_MENUS[next] ? next : (next === '/menu' ? 'menu' : 'settings');
       tgStateCount = 0;
       tgRenderMenu(tgState);
       return;
@@ -653,9 +677,7 @@
     if (reset) {
       reset.addEventListener('click', function () {
         document.getElementById('tgChat').innerHTML = '';
-        tgState = 'menu';
-        tgStateCount = 0;
-        tgBoot();
+        tgBoot();   // tgBoot เรียก tgResetState() ให้ด้วย
       });
     }
   }

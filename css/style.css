@@ -691,8 +691,10 @@ footer {
   .spec-grid { grid-template-columns: 1fr; gap: 30px; }
   .spec-aside { border-left:none; padding-left:0; border-top:1px solid var(--line-br); padding-top:26px; }
   h2 { font-size: 34px; }
-  #topbar nav { gap: 14px; }
-  #topbar { padding: 10px 14px; }
+  #topbar { flex-wrap: wrap; row-gap: 8px; padding: 10px 14px; border-bottom: none; }
+  #topbar nav { order: 3; flex-basis: 100%; justify-content: center; gap: 10px 14px; }
+  #themeToggle { order: 2; }
+  .ticker { position: static; order: 4; flex-basis: 100%; }
   main { padding: 0 16px; }
   .feat { grid-template-columns: 46px 1fr; gap: 14px; }
   .feat-num { font-size: 22px; }
@@ -719,7 +721,7 @@ footer {
   .tg-kb { grid-template-columns: 1fr; }
   .changelog li { flex-direction: column; gap: 6px; }
   .changelog .tag { align-self: flex-start; }
-  .ticker { top: 52px; }
+  .hero { padding-top: 150px; }
 }
 
 @media (max-width: 480px) {
@@ -733,4 +735,6 @@ footer {
   .mode-list li b { font-size: 20px; }
   .plate { padding: 18px 16px; font-size: 14px; }
   .warn-plate p { font-size: 16px; }
+  .hero-plate { width: auto; max-width: 100%; overflow-wrap: anywhere; }
+  .hero { padding-top: 175px; }
 }

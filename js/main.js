@@ -167,6 +167,31 @@
     }
   }
 
+  /* ---------- ปุ่มสลับความเสี่ยงใน section กำไร (low / normal) ---------- */
+  function initRiskToggle() {
+    var wrap = document.querySelector('.risk-toggle');
+    if (!wrap) return;
+    var btns = wrap.querySelectorAll('.risk-btn');
+    var ledes = document.querySelectorAll('.sec-lede[data-risk]');
+    var explains = document.querySelectorAll('.profit-explain[data-risk]');
+
+    var saved = null;
+    try { saved = localStorage.getItem('lateea-risk'); } catch (e) {}
+    var risk = saved === 'normal' ? 'normal' : 'low';
+
+    function apply(which) {
+      btns.forEach(function (b) { b.classList.toggle('is-active', b.getAttribute('data-risk') === which); });
+      ledes.forEach(function (el) { el.hidden = el.getAttribute('data-risk') !== which; });
+      explains.forEach(function (el) { el.hidden = el.getAttribute('data-risk') !== which; });
+      try { localStorage.setItem('lateea-risk', which); } catch (e) {}
+    }
+
+    apply(risk);
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () { apply(b.getAttribute('data-risk')); });
+    });
+  }
+
   /* ============================================================
      Telegram เดโม่ — จำลองบอท LateEA ตัวจริง (กดปุ่มได้จริง)
      Menu state machine จาก Build*Menu() ในโค้ด EA
@@ -710,6 +735,7 @@
 
   window.addEventListener('DOMContentLoaded', function () {
     initTheme();
+    initRiskToggle();
     init3D();
     initReveal();
     initTicker();

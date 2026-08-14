@@ -862,3 +862,32 @@ body.theme-night .btn-wikifx {
 @media (max-width: 860px) {
   .profit-grid { grid-template-columns: 1fr; }
 }
+
+/* ---------- risk toggle (low / normal) ---------- */
+.risk-toggle {
+  display: inline-flex;
+  gap: 4px;
+  margin-bottom: 26px;
+  padding: 4px;
+  border: 1px solid var(--line-br);
+  background: var(--bg-soft);
+  border-radius: 999px;
+}
+.risk-btn {
+  padding: 9px 22px;
+  font-family: var(--sans);
+  font-size: 14.5px; font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all .25s;
+}
+.risk-btn:hover { color: var(--gold-br); }
+.risk-btn.is-active {
+  color: #1c1508;
+  background: linear-gradient(180deg, var(--gold-br), var(--gold));
+  box-shadow: 0 2px 10px rgba(138,109,47,.35);
+}

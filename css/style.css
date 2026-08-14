@@ -891,3 +891,18 @@ body.theme-night .btn-wikifx {
   background: linear-gradient(180deg, var(--gold-br), var(--gold));
   box-shadow: 0 2px 10px rgba(138,109,47,.35);
 }
+
+/* ---------- profit grid v3 (3 cards) + footer dev credit ---------- */
+.profit-fig-wide { grid-column: 1 / -1; }
+.profit-fig-wide .profit-card { max-width: 640px; margin: 0 auto; }
+.foot-dev {
+  margin-top: 14px;
+  font-family: var(--sans);
+  font-size: 14px;
+  letter-spacing: .12em;
+  color: var(--faint);
+}
+.foot-dev-name {
+  color: var(--gold-br);
+  font-weight: 600;
+}

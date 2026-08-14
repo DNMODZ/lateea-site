@@ -174,6 +174,7 @@
     var btns = wrap.querySelectorAll('.risk-btn');
     var ledes = document.querySelectorAll('.sec-lede[data-risk]');
     var explains = document.querySelectorAll('.profit-explain[data-risk]');
+    var grids = document.querySelectorAll('.profit-grid[data-risk]');
 
     var saved = null;
     try { saved = localStorage.getItem('lateea-risk'); } catch (e) {}
@@ -183,6 +184,7 @@
       btns.forEach(function (b) { b.classList.toggle('is-active', b.getAttribute('data-risk') === which); });
       ledes.forEach(function (el) { el.hidden = el.getAttribute('data-risk') !== which; });
       explains.forEach(function (el) { el.hidden = el.getAttribute('data-risk') !== which; });
+      grids.forEach(function (el) { el.hidden = el.getAttribute('data-risk') !== which; });
       try { localStorage.setItem('lateea-risk', which); } catch (e) {}
     }
 

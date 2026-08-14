@@ -906,3 +906,21 @@ body.theme-night .btn-wikifx {
   color: var(--gold-br);
   font-weight: 600;
 }
+
+/* ---------- profit v4: inline withdrawals note + short normal explain ---------- */
+.profit-note-inline {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.profit-note-inline b { color: var(--gold-br); }
+.explain-short {
+  color: var(--cream);
+  font-size: 17px;
+  line-height: 1.9;
+}
+.explain-short b { color: var(--gold-br); }

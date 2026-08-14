@@ -820,3 +820,45 @@ body.theme-night .btn-wikifx {
   .ticker-track { animation: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
 }
+
+/* ---------- profit section v2 (two cards + risk-low explain) ---------- */
+.profit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 34px;
+  align-items: start;
+}
+.profit-card.dark-card {
+  background: #1e222d;
+  border-color: #2c3140;
+  padding: 22px 16px;
+}
+.dark-card .profit-head { border-bottom-color: #2c3140; }
+.dark-card .p-name { color: #fff; }
+.dark-card img { border-color: #2c3140; background: #1e222d; }
+.profit-explain {
+  max-width: 640px;
+  margin: 44px auto 0;
+  padding: 26px 30px;
+  border: 1px solid var(--line-br);
+  background: var(--bg-soft);
+}
+.profit-explain h3 {
+  font-family: var(--sans);
+  font-size: 22px; font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 14px;
+}
+.profit-explain ul { list-style: none; }
+.profit-explain li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--cream);
+  font-size: 17px;
+}
+.profit-explain li:last-child { border-bottom: none; }
+.profit-explain b { color: var(--gold-br); }
+
+@media (max-width: 860px) {
+  .profit-grid { grid-template-columns: 1fr; }
+}

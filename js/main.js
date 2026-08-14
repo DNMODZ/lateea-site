@@ -198,7 +198,7 @@
      ============================================================ */
   // หน้าเวอร์ชันใหม่ (v16-luna-1408.html) มี data-version="1408" → แสดงฟีเจอร์ใหม่เพิ่ม
   var tgIsLuna1408 = document.body && document.body.getAttribute('data-version') === '1408';
-  var tgNewsImpactHigh = false;   // false = High+Medium (ค่าเริ่มต้นของโค้ด v16deep-1408)
+  var tgNewsImpactHigh = false;   // false = High+Medium (ค่าเริ่มต้นของโค้ด v16luna-1408)
 
   var tgState = 'menu';
   var tgStateParams = null;

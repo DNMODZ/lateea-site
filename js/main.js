@@ -134,9 +134,10 @@
   }
 
   /* ---------- โหมดกลางวัน/กลางคืน ----------
-     ค่าเริ่มต้น: กลางวัน (โหมดสว่าง)
+     ค่าเริ่มต้น: กลางคืน (ธีมมืด)
      กลางคืน = body.theme-night
-     จำการเลือกไว้ใน localStorage ('lateea-theme') */
+     จำการเลือกไว้ใน localStorage ('lateea-theme')
+     checked = กลางคืน (ลูกบิดขวา ติดป้าย 'กลางคืน') */
   function initTheme() {
     var body = document.body;
     var toggle = document.getElementById('themeToggle');
@@ -144,12 +145,12 @@
 
     var saved = null;
     try { saved = localStorage.getItem('lateea-theme'); } catch (e) {}
-    var night = saved === 'night';          // กลางวัน = ค่าเริ่มต้น
+    var night = saved !== 'day';          // ค่าเริ่มต้น = กลางคืน (ธีมมืด)
 
     function apply(nightMode) {
       body.classList.toggle('theme-night', nightMode);
       if (toggle) toggle.textContent = nightMode ? '🌙' : '☀️';
-      if (switchBox) switchBox.checked = !nightMode;   // checked = กลางวัน
+      if (switchBox) switchBox.checked = nightMode;   // checked = กลางคืน
       try { localStorage.setItem('lateea-theme', nightMode ? 'night' : 'day'); } catch (e) {}
     }
 
@@ -162,7 +163,7 @@
     }
     if (switchBox) {
       switchBox.addEventListener('change', function () {
-        apply(!switchBox.checked);   // uncheck = กลางคืน
+        apply(switchBox.checked);   // checked = กลางคืน
       });
     }
   }
